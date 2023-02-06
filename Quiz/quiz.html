@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style type="text/css">@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400@display=swap")
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(103, 160, 169);
+    background-image: linear-gradient(180deg,rgb(103, 160, 169)0%, #f5f7fa 80%);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+}
+
+.quiz-container {
+    background-color: #f5f7fa;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 2px rgba(100, 100, 100, 0.1);
+    width: 600px;
+    overflow: hidden;
+}
+
+.quiz-header {
+    padding: 2rem;
+}
+
+.quiz-header .timer {
+    display: flex;
+    justify-content: space-between;
+    width: 145px;
+    height: 45px;
+    background: #0f5fd7;
+    border: 1px solid #054db9;
+    align-items: center;
+    border-radius: 5px;
+    padding: 0 8px;
+}
+
+
+h2 {
+    padding: 1rem;
+    text-align: center;
+    margin: 0;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    font-size: 1.2rem;
+    margin: 1rem 0;
+}
+
+ul li label {
+    cursor: pointer;
+}
+
+button {
+    background-color:  rgb(53, 120, 130);
+    color: #fff;
+    border: none;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-family: inherit;
+    padding: 1.3rem;
+}
+
+button:hover {
+    background-color: rgb(22, 60, 66);
+}
+
+button:focus {
+    outline: none;
+    background-color: rgb(5, 54, 61);
+}
+</style> 
+
+</head>
+<body>
+    <div class="quiz-container" id="quiz">
+        <div class="quiz-header">
+            <h2 id="question">Question for you</h2>
+        <ul>
+            <li>
+                <input type="radio" name="answer" id="a" class="answer">
+                <label for="a" id="a_text">Question</label>
+            </li>
+            <li>
+                <input type="radio" name="answer" id="b" class="answer">
+                <label for="b" id="b_text">Question</label>
+            </li>
+            <li>
+                <input type="radio" name="answer" id="c" class="answer">
+                <label for="c" id="c_text">Question</label>
+            </li>
+            <li>
+                <input type="radio" name="answer" id="d" class="answer">
+                <label for="d" id="d_text">Question</label>
+            </li>
+        </ul>
+        
+    </div>
+    <button id="submit">Submit</button>
+    </div>
+    <script>
+        const quizData = [
+    {
+        question : "What does purr mean?",
+        a: "pantera coat",
+        b: "cat sound",
+        c: "feeling",
+        d: "farting sound",
+        correct: "b"
+    },
+    {
+        question : "What is the name of the creator of a bookmark",
+        a: "John",
+        b: "Book",
+        c: "Bendjamin",
+        d: "Mark",
+        correct: "d"
+    },
+    {
+        question : "The meaning of a sound is",
+        a: "healthy",
+        b: "loud",
+        c: "a plant",
+        d: "a part of a car",
+        correct: "a"
+    },
+    {
+        question : "Meaning of a sandwich is",
+        a: "sand wich is in a desert",
+        b: "sneeze",
+        c: "food",
+        d: "special witch",
+        correct: "c"
+    },
+    {
+        question : "What is the meaning of a lesson ",
+        a: "french name",
+        b: "period of learning",
+        c: "german name",
+        d: "spanich last name",
+        correct: "b"
+    },
+    {
+        question : "what does second stand for",
+        a: "part of an hour",
+        b: "more then one",
+        c: "twins",
+        d: "number at a line",
+        correct: "d",
+        correct: "a"
+    },
+    
+];
+
+const quiz = document.getElementById('quiz')
+const answerEls = document.querySelectorAll('.answer')
+const questionEl = document.getElementById('question')
+const a_text = document.getElementById('a_text')
+const b_text = document.getElementById('b_text')
+const c_text = document.getElementById('c_text')
+const d_text = document.getElementById('d_text')
+const submitBtn = document.getElementById('submit')
+
+
+let currentQuiz = 0
+let score = 0
+let que_count = 0;
+let que_numb = 1;
+let counter;
+
+
+loadQuiz()
+
+    function loadQuiz() {
+        deselectAnswers()
+
+        const currentQuizData = quizData[currentQuiz]
+
+        questionEl.innerText = currentQuizData.question 
+        a_text.innerText = currentQuizData.a
+        b_text.innerText = currentQuizData.b
+        c_text.innerText = currentQuizData.c
+        d_text.innerText = currentQuizData.d
+    }
+
+    function deselectAnswers() {
+        answerEls.forEach(answerEl => answerEl.checked = false)
+    }
+
+    function getSelected() {
+        let answer
+
+        answerEls.forEach(answerEl => {
+            if(answerEl.checked) {
+                answer = answerEl.id
+            }
+        })
+
+        return answer
+    
+}
+
+
+    submitBtn.addEventListener('click', () => {
+        const answer = getSelected()
+
+        if(answer) {
+            if(answer === quizData[currentQuiz].correct) {
+            score++
+        }
+
+        currentQuiz++
+
+        if(currentQuiz < quizData.length) {
+            loadQuiz()
+        } else {
+            quiz.innerHTML =
+            `<h2>You answered ${score}/${quizData.length} questions correctly</h2>
+
+            <button onclick="location.reload()">Reload</button>`
+        }
+    }
+    })
+    </script>
+</body>
+</html>
